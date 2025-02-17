@@ -15,7 +15,7 @@ class CargoConnectRouteServiceProvider extends RouteServiceProvider
      */
     public function map(Router $router)
     {
-        $router->post('shipment/plenty_tutorial/register_shipments', [
+        $router->post('shipment/cargo_connect/register_shipments', [
             'middleware' => 'oauth',
             'uses'       => 'CargoConnect\Controllers\ShipmentController@registerShipments'
         ]);

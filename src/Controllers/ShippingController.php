@@ -114,13 +114,13 @@ class ShippingController extends Controller
 		$orderIds = $this->getOpenOrderIds($orderIds);
 		$shipmentDate = date('Y-m-d');
 
+        /*
 		foreach($orderIds as $orderId)
 		{
 			$order = $this->orderRepository->findOrderById($orderId);
 
             // gathering required data for registering the shipment
 
-            /** @var Address $address */
             $address = $order->deliveryAddress;
 
             $receiverFirstName     = $address->firstName;
@@ -192,6 +192,43 @@ class ShippingController extends Controller
             }
 
 		}
+        */
+
+        $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
+
+        $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Authorization: Bearer " . $token,
+            "Content-Type: application/json"
+        ));
+
+        $data = array(
+            "myData" => "Adding Shipments",
+            "order_ids" => $orderIds
+        );
+
+        $json_data = json_encode($data);
+
+        curl_setopt($ch, CURLOPT_URL, $APP_URL);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_exec($ch);
+        curl_close($ch);
+
+        $response = [
+            'status' => 'added shipment ok',
+        ];
+
+        $this->createOrderResult[123] = $this->buildResultArray(
+            true,
+            $this->getStatusMessage($response),
+            false,
+            null
+        );
 
 		// return all results to service
 		return $this->createOrderResult;
@@ -209,6 +246,44 @@ class ShippingController extends Controller
     public function deleteShipments(Request $request, $orderIds)
     {
         $orderIds = $this->getOrderIds($request, $orderIds);
+
+        $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
+
+        $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Authorization: Bearer " . $token,
+            "Content-Type: application/json"
+        ));
+
+        $data = array(
+            "myData" => "Delete Shipments",
+            "order_ids" => $orderIds
+        );
+
+        $json_data = json_encode($data);
+
+        curl_setopt($ch, CURLOPT_URL, $APP_URL);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_exec($ch);
+        curl_close($ch);
+
+        $response = [
+            'status' => 'order deleted ok',
+        ];
+
+        $this->createOrderResult[123] = $this->buildResultArray(
+            true,
+            $this->getStatusMessage($response),
+            false,
+            null
+        );
+
+        /*
         foreach ($orderIds as $orderId)
         {
             $shippingInformation = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
@@ -244,6 +319,7 @@ class ShippingController extends Controller
 
 
         }
+        */
 
         // return result array
         return $this->createOrderResult;
@@ -259,6 +335,7 @@ class ShippingController extends Controller
 	 */
 	private function saveLabelToS3($labelUrl, $key)
 	{
+        return true;
 		$ch = curl_init();
 
 		// Set URL to download
@@ -474,6 +551,31 @@ class ShippingController extends Controller
 	 */
 	private function handleAfterRegisterShipment($labelUrl, $shipmentNumber, $sequenceNumber)
 	{
+        $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
+
+        $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Authorization: Bearer " . $token,
+            "Content-Type: application/json"
+        ));
+
+        $data = array(
+            "myData" => "Handling after register shipment",
+        );
+
+        $json_data = json_encode($data);
+
+        curl_setopt($ch, CURLOPT_URL, $APP_URL);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_exec($ch);
+        curl_close($ch);
+
+        /*
 		$shipmentItems = array();
 		$storageObject = $this->saveLabelToS3(
 			$labelUrl,
@@ -489,5 +591,7 @@ class ShippingController extends Controller
 				$shipmentNumber,
 				$storageObject->key));
 		return $shipmentItems;
+        */
+        return [];
 	}
 }
