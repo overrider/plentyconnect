@@ -1,14 +1,14 @@
 <?php
-namespace ShippingTutorial\Providers;
+namespace CargoConnect\Providers;
 
 use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\Router;
 
 /**
- * Class ShippingTutorialRouteServiceProvider
- * @package ShippingTutorial\Providers
+ * Class CargoConnectRouteServiceProvider
+ * @package CargoConnect\Providers
  */
-class ShippingTutorialRouteServiceProvider extends RouteServiceProvider
+class CargoConnectRouteServiceProvider extends RouteServiceProvider
 {
     /**
      * @param Router $router
@@ -17,7 +17,7 @@ class ShippingTutorialRouteServiceProvider extends RouteServiceProvider
     {
         $router->post('shipment/plenty_tutorial/register_shipments', [
             'middleware' => 'oauth',
-            'uses'       => 'ShippingTutorial\Controllers\ShipmentController@registerShipments'
+            'uses'       => 'CargoConnect\Controllers\ShipmentController@registerShipments'
         ]);
   	}
 
