@@ -25,7 +25,7 @@ class CargoConnectServiceProvider extends ServiceProvider
 
         $shippingServiceProviderService->registerShippingProvider(
             'CargoConnect',
-            ['de' => '*** CargoConnect plugin description ***', 'en' => '*** CargoConnect plugin description ***'],
+            ['de' => 'Cargo International Connect', 'en' => 'Cargo International Connect'],
             [
                 'CargoConnect\\Controllers\\ShippingController@registerShipments',
                 'CargoConnect\\Controllers\\ShippingController@deleteShipments',
