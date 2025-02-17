@@ -329,7 +329,6 @@ class ShippingController extends Controller
 		foreach ($shipmentItems as $shipmentItem)
 		{
 			$transactionIds[] = $shipmentItem['shipmentNumber'];
-			
 		}
 
         $shipmentAt = date(\DateTime::W3C, strtotime($shipmentDate));

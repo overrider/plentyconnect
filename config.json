@@ -6,23 +6,9 @@
     "type": "dropdown",
     "possibleValues": {
       "0": "Test",
-      "1": "Productive"
+      "1": "Produktivbetrieb"
     },
     "default": "0"
-  },
-  {
-    "tab": "General",
-    "key": "username",
-    "label": "Username",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "General",
-    "key": "password",
-    "label": "Password",
-    "type": "password",
-    "default": ""
   },
   {
     "tab": "General",
