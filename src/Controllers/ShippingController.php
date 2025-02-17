@@ -195,11 +195,10 @@ class ShippingController extends Controller
         */
 
 
-        $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
-
-        $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
+        $token = $this->config->get('CargoConnect.api_token');
 
 		foreach($orderIds as $orderId){
+            $APP_URL='https://staging.spedition.de/api/plentymarkets/import/' . $orderId;
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_HEADER, true);
@@ -210,7 +209,7 @@ class ShippingController extends Controller
             ));
 
             $data = array(
-                "myData" => "Adding Shipments",
+                "myData" => "Adding Shipments xxx",
                 "order_ids" => $orderIds,
                 "myToken" => $this->config->get('CargoConnect.api_token'),
             );
@@ -252,7 +251,7 @@ class ShippingController extends Controller
     {
         $orderIds = $this->getOrderIds($request, $orderIds);
 
-        $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
+        $token = $this->config->get('CargoConnect.api_token');
 
         $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
 
@@ -556,7 +555,7 @@ class ShippingController extends Controller
 	 */
 	private function handleAfterRegisterShipment($labelUrl, $shipmentNumber, $sequenceNumber)
 	{
-        $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
+        $token = $this->config->get('CargoConnect.api_token');
 
         $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
 
