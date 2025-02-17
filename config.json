@@ -25,6 +25,13 @@
     "default": ""
   },
   {
+    "tab": "General",
+    "key": "api_token",
+    "label": "API Token",
+    "type": "text",
+    "default": ""
+  },
+  {
     "tab": "Sender",
     "key": "senderName",
     "label": "Name",
