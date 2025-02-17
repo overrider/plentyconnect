@@ -111,7 +111,7 @@ class ShippingController extends Controller
 	public function registerShipments(Request $request, $orderIds)
 	{
 		$orderIds = $this->getOrderIds($request, $orderIds);
-		$orderIds = $this->getOpenOrderIds($orderIds);
+		//$orderIds = $this->getOpenOrderIds($orderIds);
 		$shipmentDate = date('Y-m-d');
 
         /*
@@ -194,41 +194,46 @@ class ShippingController extends Controller
 		}
         */
 
+
         $token = "d35aee6f-4d85-43ab-b06c-22f2804f0891|R4Gc7wrpF9OP0mcXDngSJ32lYZzaXGIb5DKlt7DW2b07974e";
 
         $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Authorization: Bearer " . $token,
-            "Content-Type: application/json"
-        ));
+		foreach($orderIds as $orderId){
 
-        $data = array(
-            "myData" => "Adding Shipments",
-            "order_ids" => $orderIds
-        );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Authorization: Bearer " . $token,
+                "Content-Type: application/json"
+            ));
 
-        $json_data = json_encode($data);
+            $data = array(
+                "myData" => "Adding Shipments",
+                "order_ids" => $orderIds,
+                "myToken" => $this->config->get('CargoConnect.api_token'),
+            );
 
-        curl_setopt($ch, CURLOPT_URL, $APP_URL);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-        curl_exec($ch);
-        curl_close($ch);
+            $json_data = json_encode($data);
 
-        $response = [
-            'status' => 'added shipment ok',
-        ];
+            curl_setopt($ch, CURLOPT_URL, $APP_URL);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+            curl_exec($ch);
+            curl_close($ch);
 
-        $this->createOrderResult[123] = $this->buildResultArray(
-            true,
-            $this->getStatusMessage($response),
-            false,
-            null
-        );
+            $response = [
+                'status' => 'Uebermittlung erfolgreich!',
+            ];
+
+            $this->createOrderResult[$orderId] = $this->buildResultArray(
+                true,
+                $this->getStatusMessage($response),
+                false,
+                null
+            );
+        }
 
 		// return all results to service
 		return $this->createOrderResult;
