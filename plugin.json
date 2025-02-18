@@ -1,6 +1,6 @@
 {
       "name"                  : "CargoConnect",
-      "marketplaceName"       : [{"en":"Connect Versandpluging", "de":"Connect Versandplugin"}],
+      "marketplaceName"       : [{"en":"Connect Shippingplugin", "de":"Connect Versandplugin"}],
       "description"           : "A bridge between Cargo International GmbH and PlentyOne",
       "namespace"             : "CargoConnect",
       "author"                : "David S.",

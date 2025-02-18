@@ -1,6 +1,6 @@
-# Release Notes for PluginShippingTutorial
+# Release Notes for CargoConnect
 
-## v0.1.0 (2017-02-19)
+## v0.3.0 (2017-02-19)
 
 ### Added
 - initial version

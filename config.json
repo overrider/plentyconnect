@@ -8,59 +8,21 @@
       "0": "Test",
       "1": "Produktivbetrieb"
     },
-    "default": "0"
+    "default": "1"
   },
   {
     "tab": "General",
     "key": "api_token",
-    "label": "API Token",
+    "label": "Cargo Connect API Token",
     "type": "text",
     "default": ""
   },
   {
-    "tab": "Sender",
-    "key": "senderName",
-    "label": "Name",
+    "tab": "General",
+    "key": "api_url",
+    "label": "API URL",
     "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Sender",
-    "key": "senderStreet",
-    "label": "Street",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Sender",
-    "key": "senderNo",
-    "label": "No",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Sender",
-    "key": "senderPostalCode",
-    "label": "Postal code",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Sender",
-    "key": "senderTown",
-    "label": "Town",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Sender",
-    "key": "senderCountry",
-    "label": "Country",
-    "type": "dropdown",
-    "possibleValues": {
-      "0": "Germany",
-      "1": "Austria"
-    },
-    "default": "0"
+    "default": "https://backpack.ironwhale.com/api/plentyconnect"
   }
+
 ]

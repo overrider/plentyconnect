@@ -1,25 +1,3 @@
-plentymarkets shipping plugin tutorial
-
-Copyright © 2017 plentymarkets GmbH
-
-According to our dual licensing model, this program can be used either
-under the terms of the GNU Affero General Public License, version 3,
-or under a proprietary license.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-"plentymarkets" is a registered trademark of plentymarkets GmbH.
-The licensing of the program under the AGPLv3 does not imply a
-trademark license. Therefore any rights, titles and interests in the
-above trademarks remain entirely with the trademark owners.
-
-
-
-
-
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 

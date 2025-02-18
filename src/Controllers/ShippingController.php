@@ -100,6 +100,65 @@ class ShippingController extends Controller
 		$this->config = $config;
 	}
 
+    public function _post($endpoint, $params){
+        $api_token = $this->config->get('CargoConnect.api_token');
+        $api_url = $this->config->get('CargoConnect.api_url');
+        $api_url .= $endpoint;
+
+        $json_data = json_encode($params);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Authorization: Bearer " . $api_token,
+            "Content-Type: application/json"
+        ));
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+
+        $response = curl_exec($ch);
+
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($response, 0, $header_size);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($httpcode !== 200){
+            debugMsg("Problem");
+            return false;
+        }
+
+        $body = substr($response, $header_size);
+
+        $err_no = curl_errno($ch);
+        $err    = curl_error($ch);
+
+        curl_close($ch);
+
+        if ($err_no){
+            echo 'Error:' . curl_error($ch);
+        }
+
+        $headers = [];
+        $headerLines = explode("\r\n", $header);
+        foreach ($headerLines as $line) {
+            if (strpos($line, ':') !== false) {
+                list($key, $value) = explode(': ', $line, 2);
+                $headers[$key] = $value;
+            }
+        }
+
+        $data = json_decode($body, TRUE);
+        return $data;
+    }
+
+    public function _get(){
+    }
 
 	/**
 	 * Registers shipment(s)
@@ -114,9 +173,7 @@ class ShippingController extends Controller
 		//$orderIds = $this->getOpenOrderIds($orderIds);
 		$shipmentDate = date('Y-m-d');
 
-        /*
-		foreach($orderIds as $orderId)
-		{
+		foreach($orderIds as $orderId) {
 			$order = $this->orderRepository->findOrderById($orderId);
 
             // gathering required data for registering the shipment
@@ -132,6 +189,7 @@ class ShippingController extends Controller
             $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
             // reads sender data from plugin config. this is going to be changed in the future to retrieve data from backend ui settings
+            /*
             $senderName           = $this->config->get('CargoConnect.senderName', 'plentymarkets GmbH - Timo Zenke');
             $senderStreet         = $this->config->get('CargoConnect.senderStreet', 'Bürgermeister-Brunner-Str.');
             $senderNo             = $this->config->get('CargoConnect.senderNo', '15');
@@ -139,11 +197,13 @@ class ShippingController extends Controller
             $senderTown           = $this->config->get('CargoConnect.senderTown', 'Kassel');
             $senderCountryID      = $this->config->get('CargoConnect.senderCountry', '0');
             $senderCountry        = ($senderCountryID == 0 ? 'Germany' : 'Austria');
+             */
 
             // gets order shipping packages from current order
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
 
             // iterating through packages
+            /*
             foreach($packages as $package)
             {
                 // weight
@@ -155,90 +215,46 @@ class ShippingController extends Controller
                 // package dimensions
                 list($length, $width, $height) = $this->getPackageDimensions($packageType);
 
+                // check wether we are in test or productive mode, use different login or connection data
+                $mode = $this->config->get('CargoConnect.mode', '0');
 
-                try
-                {
-                    // check wether we are in test or productive mode, use different login or connection data
-                    $mode = $this->config->get('CargoConnect.mode', '0');
+                // shipping service providers API should be used here
+                $response = [
+                    'labelUrl' => 'https://developers.plentymarkets.com/layout/plugins/production/plentypluginshowcase/images/landingpage/why-plugin-2.svg',
+                    'shipmentNumber' => '1111112222223333',
+                    'sequenceNumber' => 1,
+                    'status' => 'shipment sucessfully registered'
+                ];
 
-                    // shipping service providers API should be used here
-                    $response = [
-                        'labelUrl' => 'https://developers.plentymarkets.com/layout/plugins/production/plentypluginshowcase/images/landingpage/why-plugin-2.svg',
-                        'shipmentNumber' => '1111112222223333',
-                        'sequenceNumber' => 1,
-                        'status' => 'shipment sucessfully registered'
-                    ];
+                // handles the response
+                $shipmentItems = $this->handleAfterRegisterShipment($response['labelUrl'], $response['shipmentNumber'], $package->id);
 
-                    // handles the response
-                    $shipmentItems = $this->handleAfterRegisterShipment($response['labelUrl'], $response['shipmentNumber'], $package->id);
+                // adds result
+                $this->createOrderResult[$orderId] = $this->buildResultArray(
+                    true,
+                    $this->getStatusMessage($response),
+                    false,
+                    $shipmentItems);
 
-                    // adds result
-                    $this->createOrderResult[$orderId] = $this->buildResultArray(
-                        true,
-                        $this->getStatusMessage($response),
-                        false,
-                        $shipmentItems);
-
-                    // saves shipping information
-                    $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
-
-
-                }
-                catch(\SoapFault $soapFault)
-                {
-                    // handle exception
-                }
-
+                // saves shipping information
+                $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
             }
+             */
 
-		}
-        */
+            $this->_post("/ping", $address);
 
-
-        $token = $this->config->get('CargoConnect.api_token');
-
-		foreach($orderIds as $orderId){
-            $APP_URL='https://staging.spedition.de/api/plentymarkets/import/' . $orderId;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "Authorization: Bearer " . $token,
-                "Content-Type: application/json"
-            ));
-
-            $data = array(
-                "myData" => "Adding Shipments xxx",
-                "order_ids" => $orderIds,
-                "myToken" => $this->config->get('CargoConnect.api_token'),
-            );
-
-            $json_data = json_encode($data);
-
-            curl_setopt($ch, CURLOPT_URL, $APP_URL);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-            curl_exec($ch);
-            curl_close($ch);
-
-            $response = [
-                'status' => 'Uebermittlung erfolgreich!',
-            ];
-
+            $response['status'] = "Erfolgreich";
             $this->createOrderResult[$orderId] = $this->buildResultArray(
                 true,
                 $this->getStatusMessage($response),
                 false,
-                null
+                null, //$shipmentItems
             );
-        }
+		}
 
 		// return all results to service
 		return $this->createOrderResult;
 	}
-
-
 
     /**
      * Cancels registered shipment(s)
@@ -426,8 +442,7 @@ class ShippingController extends Controller
 			'shipmentAt' => $shipmentAt
 
 		];
-		$this->shippingInformationRepositoryContract->saveShippingInformation(
-			$data);
+		$this->shippingInformationRepositoryContract->saveShippingInformation($data);
 	}
 
     /**
@@ -438,7 +453,6 @@ class ShippingController extends Controller
      */
 	private function getOpenOrderIds($orderIds)
 	{
-		
 		$openOrderIds = array();
 		foreach ($orderIds as $orderId)
 		{
