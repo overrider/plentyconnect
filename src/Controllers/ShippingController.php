@@ -129,7 +129,6 @@ class ShippingController extends Controller
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($httpcode !== 200){
-            debugMsg("Problem");
             return false;
         }
 
