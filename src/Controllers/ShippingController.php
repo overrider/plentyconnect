@@ -173,7 +173,8 @@ class ShippingController extends Controller
 		$shipmentDate = date('Y-m-d');
 
 		foreach($orderIds as $orderId) {
-			$order = $this->orderRepository->findOrderById($orderId);
+			//$order = $this->orderRepository->findOrderById($orderId);
+			$order = $this->orderRepository->findById($orderId, ['addresses']);
 
             // gathering required data for registering the shipment
 
