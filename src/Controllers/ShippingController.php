@@ -240,7 +240,12 @@ class ShippingController extends Controller
             }
              */
 
-            $this->_post("/ping", $address);
+            $params = [
+                'order' => $order,
+                'packages' => $packages
+            ];
+
+            $this->_post("/ping", $params);
 
             $response['status'] = "Erfolgreich";
             $this->createOrderResult[$orderId] = $this->buildResultArray(
