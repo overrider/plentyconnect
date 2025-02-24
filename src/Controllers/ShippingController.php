@@ -149,7 +149,7 @@ class ShippingController extends Controller
             $delivery_address = $address;
 
             //marker
-            $plugin_version = 9;
+            $plugin_version = 10;
             #$warehouse_address = $this->orderAddressRepository->getAddressOfOrder(103, $orderId, AddressType::WAREHOUSE);
             $warehouse_address = $order->warehouseSender;
 
