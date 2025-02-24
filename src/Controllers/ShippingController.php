@@ -5,10 +5,10 @@ namespace CargoConnect\Controllers;
 
 # IW
 use Plenty\Modules\Order\Address\Contracts\OrderAddressRepositoryContract;
+use Plenty\Modules\Order\Models\Order;
 
 use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
-use Plenty\Modules\Order\Models\Order;
 
 use Plenty\Modules\Cloud\Storage\Models\StorageObject;
 
@@ -114,66 +114,6 @@ class ShippingController extends Controller
 		$this->config = $config;
 	}
 
-    public function _post($endpoint, $params)
-    {
-        $api_token = $this->config->get('CargoConnect.api_token');
-        $api_url = $this->config->get('CargoConnect.api_url');
-        $api_url .= $endpoint;
-
-        $json_data = json_encode($params);
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Authorization: Bearer " . $api_token,
-            "Content-Type: application/json"
-        ));
-        curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-
-        $response = curl_exec($ch);
-
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $header = substr($response, 0, $header_size);
-
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if ($httpcode !== 200){
-            return false;
-        }
-
-        $body = substr($response, $header_size);
-
-        $err_no = curl_errno($ch);
-        $err    = curl_error($ch);
-
-        curl_close($ch);
-
-        if ($err_no){
-            echo 'Error:' . curl_error($ch);
-        }
-
-        $headers = [];
-        $headerLines = explode("\r\n", $header);
-        foreach ($headerLines as $line) {
-            if (strpos($line, ':') !== false) {
-                list($key, $value) = explode(': ', $line, 2);
-                $headers[$key] = $value;
-            }
-        }
-
-        $data = json_decode($body, TRUE);
-        return $data;
-    }
-
-    public function _get(){
-    }
-
 	/**
 	 * Registers shipment(s)
 	 *
@@ -189,14 +129,17 @@ class ShippingController extends Controller
 
 		foreach($orderIds as $orderId) {
 			//$order = $this->orderRepository->findOrderById($orderId);
-            $order = $this->orderRepository->findById($orderId, [
-                'addresses',
-                'sender',
-                'location',
-                'relation',
-                'reference',
-                'comments',
-            ], false);
+            // $order = $this->orderRepository->findById($orderId, [
+            //     'addresses',
+            //     'sender',
+            //     'location',
+            //     'relation',
+            //     'reference',
+            //     'comments',
+            // ], false);
+
+            $order = $this->orderRepository->findOrderById($orderId);
+
 
             // gathering required data for registering the shipment
 
@@ -207,7 +150,7 @@ class ShippingController extends Controller
             //marker
             $plugin_version = 9;
             #$warehouse_address = $this->orderAddressRepository->getAddressOfOrder(103, $orderId, AddressType::WAREHOUSE);
-            $warehouse_address = $this->order->warehouseSender;
+            $warehouse_address = $order->warehouseSender;
 
             // $receiverFirstName     = $address->firstName;
             // $receiverLastName      = $address->lastName;
@@ -294,6 +237,68 @@ class ShippingController extends Controller
 		// return all results to service
 		return $this->createOrderResult;
 	}
+
+    public function _post($endpoint, $params)
+    {
+        $api_token = $this->config->get('CargoConnect.api_token');
+        $api_url = $this->config->get('CargoConnect.api_url');
+        $api_url .= $endpoint;
+
+        $json_data = json_encode($params);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Authorization: Bearer " . $api_token,
+            "Content-Type: application/json"
+        ));
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+
+        $response = curl_exec($ch);
+
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($response, 0, $header_size);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($httpcode !== 200){
+            return false;
+        }
+
+        $body = substr($response, $header_size);
+
+        $err_no = curl_errno($ch);
+        $err    = curl_error($ch);
+
+        curl_close($ch);
+
+        if ($err_no){
+            echo 'Error:' . curl_error($ch);
+        }
+
+        $headers = [];
+        $headerLines = explode("\r\n", $header);
+        foreach ($headerLines as $line) {
+            if (strpos($line, ':') !== false) {
+                list($key, $value) = explode(': ', $line, 2);
+                $headers[$key] = $value;
+            }
+        }
+
+        $data = json_decode($body, TRUE);
+        return $data;
+    }
+
+    public function _get(){
+    }
+
+
 
     /**
      * Cancels registered shipment(s)
