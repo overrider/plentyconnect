@@ -177,6 +177,25 @@ class ShippingController extends Controller
             // gets order shipping packages from current order
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
 
+            $package_infos = [];
+            foreach($packages as $package){
+                $packageType = $this->shippingPackageTypeRepositoryContract->findShippingPackageTypeById($package->packageId);
+                $length = $packageType->length;
+                $width = $packageType->width;
+                $height = $packageType->height;
+                $weight = $package->weight;
+
+                $package_infos[] = [
+                    'data1' => $package,
+                    'data2' => $packageType,
+                    'length' => $length,
+                    'width' => $width,
+                    'height' => $height
+                ];
+
+                #list($length, $width, $height) = $this->getPackageDimensions($packageType);
+            }
+
             // iterating through packages
             /*
             foreach($packages as $package)
@@ -221,6 +240,7 @@ class ShippingController extends Controller
                 'delivery_address' => $delivery_address,
                 'warehouse_address' => $warehouse_address,
                 'packages' => $packages,
+                'package_infos' => $package_infos,
                 'plugin_version' => $plugin_version,
             ];
 
