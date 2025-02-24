@@ -163,7 +163,20 @@ class ShippingController extends Controller
 
 
 
-            // reads sender data from plugin config. this is going to be changed in the future to retrieve data from backend ui settings
+            // Retrieve a default pickup address from plugin config
+            $default_pickup_address = [
+                'pickup_company' => $this->config->get('CargoConnect.pickup_company', ""),
+                'pickup_department' => $this->config->get('CargoConnect.pickup_department', ""),
+                'pickup_firstname' => $this->config->get('CargoConnect.pickup_firstname', ""),
+                'pickup_lastname' => $this->config->get('CargoConnect.pickup_lastname', ""),
+                'pickup_street' => $this->config->get('CargoConnect.pickup_street', ""),
+                'pickup_city' => $this->config->get('CargoConnect.pickup_city', ""),
+                'pickup_zip' => $this->config->get('CargoConnect.pickup_zip', ""),
+                'pickup_country' => $this->config->get('CargoConnect.pickup_country', ""),
+                'pickup_email' => $this->config->get('CargoConnect.pickup_email', ""),
+                'pickup_phone' => $this->config->get('CargoConnect.pickup_phone', ""),
+            ];
+
             /*
             $senderName           = $this->config->get('CargoConnect.senderName', 'plentymarkets GmbH - Timo Zenke');
             $senderStreet         = $this->config->get('CargoConnect.senderStreet', 'Bürgermeister-Brunner-Str.');
@@ -172,10 +185,22 @@ class ShippingController extends Controller
             $senderTown           = $this->config->get('CargoConnect.senderTown', 'Kassel');
             $senderCountryID      = $this->config->get('CargoConnect.senderCountry', '0');
             $senderCountry        = ($senderCountryID == 0 ? 'Germany' : 'Austria');
-             */
+            */
 
             // gets order shipping packages from current order
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
+
+            if(count($packages) == 0){
+                $response['status'] = "Erfolgreich";
+                $this->createOrderResult[$orderId] = $this->buildResultArray(
+                    false,
+                    "Error:1001 - Add at least 1 Package before submission",
+                    false,
+                    null,
+                );
+                continue;
+            }
+
 
             $package_infos = [];
             foreach($packages as $package){
@@ -188,9 +213,6 @@ class ShippingController extends Controller
                 $package_infos[] = [
                     'data1' => $package,
                     'data2' => $packageType,
-                    'length' => $length,
-                    'width' => $width,
-                    'height' => $height
                 ];
 
                 #list($length, $width, $height) = $this->getPackageDimensions($packageType);
@@ -239,6 +261,7 @@ class ShippingController extends Controller
                 'order' => $order,
                 'delivery_address' => $delivery_address,
                 'warehouse_address' => $warehouse_address,
+                'default_pickup_address' => $default_pickup_address,
                 'packages' => $packages,
                 'package_infos' => $package_infos,
                 'plugin_version' => $plugin_version,
