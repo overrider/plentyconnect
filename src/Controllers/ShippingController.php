@@ -2,8 +2,8 @@
 
 namespace CargoConnect\Controllers;
 
-#use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
-use Plenty\Modules\Order\Address\Contracts\AddressRepositoryContract;
+use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
+use Plenty\Modules\Order\Address\Contracts\OrderAddressRepositoryContract;
 use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Cloud\Storage\Models\StorageObject;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
@@ -37,6 +37,8 @@ class ShippingController extends Controller
 	 * @var AddressRepositoryContract $addressRepository
 	 */
 	private $addressRepository;
+
+    private $orderAddressRepository;
 
 	/**
 	 * @var OrderShippingPackageRepositoryContract $orderShippingPackage
@@ -83,6 +85,7 @@ class ShippingController extends Controller
 	public function __construct(Request $request,
 								OrderRepositoryContract $orderRepository,
 								AddressRepositoryContract $addressRepositoryContract,
+								OrderAddressRepositoryContract $orderAddressRepositoryContract,
 								OrderShippingPackageRepositoryContract $orderShippingPackage,
 								StorageRepositoryContract $storageRepository,
 								ShippingInformationRepositoryContract $shippingInformationRepositoryContract,
@@ -92,6 +95,7 @@ class ShippingController extends Controller
 		$this->request = $request;
 		$this->orderRepository = $orderRepository;
 		$this->addressRepository = $addressRepositoryContract;
+		$this->orderAddressRepository = $orderAddressRepositoryContract;
 		$this->orderShippingPackage = $orderShippingPackage;
 		$this->storageRepository = $storageRepository;
 
