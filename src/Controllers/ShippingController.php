@@ -190,7 +190,7 @@ class ShippingController extends Controller
 
             $delivery_address = $address->toArray();
 
-            $warehouse_address = $this->addressRepository->findAddressByType($orderId, 7)->toArray();
+            $warehouse_address = $this->addressRepository->findAddressByType($orderId, 7);
 
             // $receiverFirstName     = $address->firstName;
             // $receiverLastName      = $address->lastName;
