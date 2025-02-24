@@ -182,11 +182,13 @@ class ShippingController extends Controller
                 'relation',
                 'reference',
                 'comments',
-            ]);
+            ], false);
 
             // gathering required data for registering the shipment
 
             $address = $order->deliveryAddress;
+
+            $delivery_address = $address->toArray();
 
             $receiverFirstName     = $address->firstName;
             $receiverLastName      = $address->lastName;
@@ -251,6 +253,7 @@ class ShippingController extends Controller
 
             $params = [
                 'order' => $order,
+                'delivery_address' => $delivery_address,
                 'packages' => $packages
             ];
 
