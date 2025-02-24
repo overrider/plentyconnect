@@ -2,18 +2,25 @@
 
 namespace CargoConnect\Controllers;
 
-use Plenty\Modules\Order\Contracts\OrderAddressRepositoryContract;
 
-use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
+# IW
+use Plenty\Modules\Order\Address\Contracts\OrderAddressRepositoryContract;
+
 use Plenty\Modules\Account\Address\Models\Address;
+use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
+
 use Plenty\Modules\Cloud\Storage\Models\StorageObject;
+
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
+
 use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
 use Plenty\Modules\Order\Shipping\Information\Contracts\ShippingInformationRepositoryContract;
 use Plenty\Modules\Order\Shipping\Package\Contracts\OrderShippingPackageRepositoryContract;
 use Plenty\Modules\Order\Shipping\PackageType\Contracts\ShippingPackageTypeRepositoryContract;
 use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
+
 use Plenty\Modules\Plugin\Storage\Contracts\StorageRepositoryContract;
+
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\ConfigRepository;
@@ -197,8 +204,8 @@ class ShippingController extends Controller
             $delivery_address = $address;
 
             //marker
-            $plugin_version = 3;
-            $warehouse_address = $this->orderAddressRepository->findById(102);
+            $plugin_version = 5;
+            $warehouse_address = $this->orderAddressRepository->findAddresses($orderId);
 
             // $receiverFirstName     = $address->firstName;
             // $receiverLastName      = $address->lastName;
