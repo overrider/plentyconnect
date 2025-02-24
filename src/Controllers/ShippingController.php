@@ -174,7 +174,10 @@ class ShippingController extends Controller
 
 		foreach($orderIds as $orderId) {
 			//$order = $this->orderRepository->findOrderById($orderId);
-			$order = $this->orderRepository->findById($orderId, ['addresses']);
+            $order = $this->orderRepository->findById($orderId, [
+                'addresses',
+                'sender'
+            ]);
 
             // gathering required data for registering the shipment
 
