@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types = 1);
+
 namespace CargoConnect\Providers;
 
 use Plenty\Plugin\RouteServiceProvider;
@@ -13,12 +14,11 @@ class CargoConnectRouteServiceProvider extends RouteServiceProvider
     /**
      * @param Router $router
      */
-    public function map(Router $router)
+    public function map(Router $router): void
     {
         $router->post('shipment/cargo_connect/register_shipments', [
             'middleware' => 'oauth',
             'uses'       => 'CargoConnect\Controllers\ShipmentController@registerShipments'
         ]);
   	}
-
 }

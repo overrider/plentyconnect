@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace CargoConnect\Controllers;
 
@@ -100,7 +100,8 @@ class ShippingController extends Controller
 		$this->config = $config;
 	}
 
-    public function _post($endpoint, $params){
+    public function _post($endpoint, $params)
+    {
         $api_token = $this->config->get('CargoConnect.api_token');
         $api_url = $this->config->get('CargoConnect.api_url');
         $api_url .= $endpoint;
