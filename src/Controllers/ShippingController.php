@@ -2,7 +2,8 @@
 
 namespace CargoConnect\Controllers;
 
-use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
+#use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
+use Plenty\Modules\Order\Address\Contracts\AddressRepositoryContract;
 use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Cloud\Storage\Models\StorageObject;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
@@ -190,7 +191,7 @@ class ShippingController extends Controller
 
             $delivery_address = $address->toArray();
 
-            $warehouse_address = $this->addressRepository->findAddressByType($orderId, 7);
+            $warehouse_address = []; //$this->addressRepository->findAddressByType($orderId, 7);
 
             // $receiverFirstName     = $address->firstName;
             // $receiverLastName      = $address->lastName;
