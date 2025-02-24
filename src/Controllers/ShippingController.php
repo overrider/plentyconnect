@@ -193,10 +193,11 @@ class ShippingController extends Controller
 
             $address = $order->deliveryAddress;
 
-            $delivery_address = $address->toArray();
+            $delivery_address = $address;
 
             //marker
-            $warehouse_address = $this->orderAddressRepository->findAddressByType($orderId, 7)->toArray();
+            $plugin_version = 1;
+            $warehouse_address = $this->orderAddressRepository->findAddressByType($orderId, 7);
 
             // $receiverFirstName     = $address->firstName;
             // $receiverLastName      = $address->lastName;
@@ -265,7 +266,8 @@ class ShippingController extends Controller
                 'order' => $order,
                 'delivery_address' => $delivery_address,
                 'warehouse_address' => $warehouse_address,
-                'packages' => $packages
+                'packages' => $packages,
+                'plugin_version' => $plugin_version,
             ];
 
             $this->_post("/ping", $params);
