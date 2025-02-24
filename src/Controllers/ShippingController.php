@@ -176,7 +176,8 @@ class ShippingController extends Controller
 			//$order = $this->orderRepository->findOrderById($orderId);
             $order = $this->orderRepository->findById($orderId, [
                 'addresses',
-                'sender'
+                'sender',
+                'location',
             ]);
 
             // gathering required data for registering the shipment
