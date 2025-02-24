@@ -138,8 +138,9 @@ class ShippingController extends Controller
             //     'comments',
             // ], false);
 
-            $order = $this->orderRepository->findOrderById($orderId);
-
+            $order = $this->orderRepository->findById($orderId, [
+                'comments'
+            ]);
 
             // gathering required data for registering the shipment
 
