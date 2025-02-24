@@ -204,7 +204,7 @@ class ShippingController extends Controller
             $delivery_address = $address;
 
             //marker
-            $plugin_version = 7;
+            $plugin_version = 8;
             $warehouse_address = $this->orderAddressRepository->getAddressOfOrder(103, $orderId);
 
             // $receiverFirstName     = $address->firstName;
