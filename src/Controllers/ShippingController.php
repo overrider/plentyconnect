@@ -190,13 +190,17 @@ class ShippingController extends Controller
 
             $delivery_address = $address->toArray();
 
-            $receiverFirstName     = $address->firstName;
-            $receiverLastName      = $address->lastName;
-            $receiverStreet        = $address->street;
-            $receiverNo            = $address->houseNumber;
-            $receiverPostalCode    = $address->postalCode;
-            $receiverTown          = $address->town;
-            $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
+            $warehouse_address = $this->addressRepository->findAddressByType($orderId, 7)->toArray();
+
+            // $receiverFirstName     = $address->firstName;
+            // $receiverLastName      = $address->lastName;
+            // $receiverStreet        = $address->street;
+            // $receiverNo            = $address->houseNumber;
+            // $receiverPostalCode    = $address->postalCode;
+            // $receiverTown          = $address->town;
+            // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
+
+
 
             // reads sender data from plugin config. this is going to be changed in the future to retrieve data from backend ui settings
             /*
@@ -254,6 +258,7 @@ class ShippingController extends Controller
             $params = [
                 'order' => $order,
                 'delivery_address' => $delivery_address,
+                'warehouse_address' => $warehouse_address,
                 'packages' => $packages
             ];
 
