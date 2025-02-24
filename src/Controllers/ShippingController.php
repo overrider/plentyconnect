@@ -8,6 +8,7 @@ use Plenty\Modules\Order\Address\Contracts\OrderAddressRepositoryContract;
 
 use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
+use Plenty\Modules\Order\Models\Order;
 
 use Plenty\Modules\Cloud\Storage\Models\StorageObject;
 
