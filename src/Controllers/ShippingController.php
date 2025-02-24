@@ -179,6 +179,9 @@ class ShippingController extends Controller
                 'addresses',
                 'sender',
                 'location',
+                'relation',
+                'reference',
+                'comments',
             ]);
 
             // gathering required data for registering the shipment
