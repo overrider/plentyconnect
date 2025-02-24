@@ -2,8 +2,9 @@
 
 namespace CargoConnect\Controllers;
 
+use Plenty\Modules\Order\Contracts\OrderAddressRepositoryContract;
+
 use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
-use Plenty\Modules\Order\Address\Contracts\OrderAddressRepositoryContract;
 use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Cloud\Storage\Models\StorageObject;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
