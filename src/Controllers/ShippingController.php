@@ -166,6 +166,7 @@ class ShippingController extends Controller
 
             $pickup_address = $order->warehouseSender;
             $delivery_address = $order->deliveryAddress;
+            $iw_shipping_profile_id = $order->shippingProfileId;
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
             $shipping_information = $order->shippingInformation;
@@ -260,6 +261,7 @@ class ShippingController extends Controller
                 'shipping_information' => $shipping_information,
                 'tags' => $tags,
                 'shipping_packages' => $shipping_packages,
+                'iw_shipping_profile_id' => $iw_shipping_profile_id,
                 'plugin_revision' => $this->plugin_revision,
             ];
 
