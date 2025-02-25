@@ -252,7 +252,8 @@ class ShippingController extends Controller
 
             $this->_post("/submit-order", $params);
 
-            $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, null //$shipmentItems);
+            //$this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, $shipmentItems);
+            $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, null);
 		}
 
 		// return all results to service
