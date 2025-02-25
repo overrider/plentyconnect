@@ -90,7 +90,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 12;
+    private $plugin_revision = 13;
 
 	/**
 	 * ShipmentController constructor.
@@ -169,7 +169,10 @@ class ShippingController extends Controller
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
             $shipping_information = $order->shippingInformation;
+			$shipping_information1 = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
+
             $tags = $order->tags;
+
             $shipping_packages = $order->shippingPackages;
 
             $default_pickup_address = [
@@ -254,10 +257,10 @@ class ShippingController extends Controller
                 'default_pickup_address' => $default_pickup_address,
                 'packages' => $packages,
                 'package_infos' => $package_infos,
-                'plugin_revision' => $this->plugin_revision,
                 'shipping_information' => $shipping_information,
                 'tags' => $tags,
                 'shipping_packages' => $shipping_packages,
+                'plugin_revision' => $this->plugin_revision,
             ];
 
             $this->_post("/submit-order", $params);
