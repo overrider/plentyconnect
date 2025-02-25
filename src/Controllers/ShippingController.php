@@ -94,7 +94,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 19;
+    private $plugin_revision = 20;
 
 	/**
 	 * ShipmentController constructor.
@@ -177,8 +177,7 @@ class ShippingController extends Controller
 
             $shipping_information = $order->shippingInformation;
 			$shipping_information1 = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
-
-            $shipping_information2 = $this->orderShippingProfilesRepository->getCombinations($orderId);
+            $shipping_information2 = $this->orderShippingProfilesRepository->getCombinations($orderId, true);
 
             $tags = $order->tags;
 
