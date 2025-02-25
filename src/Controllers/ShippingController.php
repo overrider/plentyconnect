@@ -30,6 +30,8 @@ use Plenty\Modules\Order\Shipping\Information\Contracts\ShippingInformationRepos
 use Plenty\Modules\Order\Shipping\Package\Contracts\OrderShippingPackageRepositoryContract;
 use Plenty\Modules\Order\Shipping\PackageType\Contracts\ShippingPackageTypeRepositoryContract;
 use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
+use Plenty\Modules\Order\ShippingProfiles\Contracts\OrderShippingProfilesRepositoryContract;
+
 
 use Plenty\Modules\Plugin\Storage\Contracts\StorageRepositoryContract;
 
@@ -52,6 +54,8 @@ class ShippingController extends Controller
 	 * @var OrderRepositoryContract $orderRepository
 	 */
 	private $orderRepository;
+
+    private $orderShippingProfilesRepository;
 
 	/**
 	 * @var AddressRepositoryContract $addressRepository
@@ -112,6 +116,7 @@ class ShippingController extends Controller
 								StorageRepositoryContract $storageRepository,
 								ShippingInformationRepositoryContract $shippingInformationRepositoryContract,
 								ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract,
+                                OrderShippingProfilesRepositoryContract $orderShippingProfilesRepository,
                                 ConfigRepository $config)
 	{
 		$this->request = $request;
@@ -171,6 +176,8 @@ class ShippingController extends Controller
 
             $shipping_information = $order->shippingInformation;
 			$shipping_information1 = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
+
+            $shipping_information2 = $this->orderShippingProfilesRepository->getCombinations($orderId);
 
             $tags = $order->tags;
 
@@ -260,6 +267,7 @@ class ShippingController extends Controller
                 'package_infos' => $package_infos,
                 'shipping_information' => $shipping_information,
                 'shipping_information1' => $shipping_information1,
+                'shipping_information2' => $shipping_information2,
                 'tags' => $tags,
                 'shipping_packages' => $shipping_packages,
                 'iw_shipping_profile_id' => $iw_shipping_profile_id,
