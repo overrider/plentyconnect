@@ -168,7 +168,7 @@ class ShippingController extends Controller
             $delivery_address = $order->deliveryAddress;
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
-            $shipping_information = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
+            $shipping_information = $order->shippingInformation;
 
             $default_pickup_address = [
                 'pickup_company' => $this->config->get('CargoConnect.pickup_company', ""),
