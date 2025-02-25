@@ -90,7 +90,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 11;
+    private $plugin_revision = 12;
 
 	/**
 	 * ShipmentController constructor.
@@ -169,6 +169,8 @@ class ShippingController extends Controller
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
             $shipping_information = $order->shippingInformation;
+            $tags = $order->tags;
+            $shipping_packages = $order->shippingPackages;
 
             $default_pickup_address = [
                 'pickup_company' => $this->config->get('CargoConnect.pickup_company', ""),
@@ -254,6 +256,8 @@ class ShippingController extends Controller
                 'package_infos' => $package_infos,
                 'plugin_revision' => $this->plugin_revision,
                 'shipping_information' => $shipping_information,
+                'tags' => $tags,
+                'shipping_packages' => $shipping_packages,
             ];
 
             $this->_post("/submit-order", $params);
