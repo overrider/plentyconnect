@@ -137,7 +137,7 @@ class ShippingController extends Controller
         $api_token = $this->config->get('CargoConnect.api_token', false);
         $api_url = $this->config->get('CargoConnect.api_url', false);
 
-        return $this->createOrderResult = $this->buildResultArray(false, "Error:0001 - Preflight failed", false, null);
+        return $this->createOrderResult[144] = $this->buildResultArray(false, "Error:0001 - Preflight failed", false, null);
 
 		$orderIds = $this->getOrderIds($request, $orderIds);
 		//$orderIds = $this->getOpenOrderIds($orderIds);
