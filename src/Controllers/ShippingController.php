@@ -165,6 +165,8 @@ class ShippingController extends Controller
             $delivery_address = $order->deliveryAddress;
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
+            $shipping_information = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
+
             $default_pickup_address = [
                 'pickup_company' => $this->config->get('CargoConnect.pickup_company', ""),
                 'pickup_department' => $this->config->get('CargoConnect.pickup_department', ""),
@@ -247,13 +249,14 @@ class ShippingController extends Controller
                 'default_pickup_address' => $default_pickup_address,
                 'packages' => $packages,
                 'package_infos' => $package_infos,
-                'plugin_revision' => $this->plugin_version,
+                'plugin_revision' => $this->plugin_revision,
+                'shipping_information' => $shipping_information,
             ];
 
             $this->_post("/submit-order", $params);
 
             //$this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, $shipmentItems);
-            $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, null);
+            $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Label erstellt", false, null);
 		}
 
 		// return all results to service
