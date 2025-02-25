@@ -90,7 +90,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 13;
+    private $plugin_revision = 14;
 
 	/**
 	 * ShipmentController constructor.
@@ -259,6 +259,7 @@ class ShippingController extends Controller
                 'packages' => $packages,
                 'package_infos' => $package_infos,
                 'shipping_information' => $shipping_information,
+                'shipping_information1' => $shipping_information1,
                 'tags' => $tags,
                 'shipping_packages' => $shipping_packages,
                 'iw_shipping_profile_id' => $iw_shipping_profile_id,
