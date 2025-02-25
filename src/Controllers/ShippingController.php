@@ -1,6 +1,8 @@
 <?php declare(strict_types = 1);
 
 /*
+    "Error:0001 - API Key missing or invalid
+    "Error:0002 - API URL missing or invalid
     "Error:1001 - Add at least 1 Package before submission"
     "Error:1002 - Order validation failed"
     "Error:1002 - Order validation failed, please handle inside Connect"
@@ -134,6 +136,18 @@ class ShippingController extends Controller
 	 */
 	public function registerShipments(Request $request, $orderIds)
 	{
+        $api_token = $this->config->get('CargoConnect.api_token', false);
+        $api_url = $this->config->get('CargoConnect.api_url', false);
+
+        $this->createOrderResult[0] = $this->buildResultArray(
+            false,
+            "Error:0001 - Preflight failed",
+            false,
+            null,
+        );
+        return $this->createOrderResult;
+
+
 		$orderIds = $this->getOrderIds($request, $orderIds);
 		//$orderIds = $this->getOpenOrderIds($orderIds);
 		$shipmentDate = date('Y-m-d');
@@ -155,9 +169,7 @@ class ShippingController extends Controller
 
             // gathering required data for registering the shipment
 
-            $address = $order->deliveryAddress;
-
-            $delivery_address = $address;
+            $delivery_address = $order->deliveryAddress;
 
             //marker
             $plugin_version = 10;
@@ -171,8 +183,6 @@ class ShippingController extends Controller
             // $receiverPostalCode    = $address->postalCode;
             // $receiverTown          = $address->town;
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
-
-
 
             // Retrieve a default pickup address from plugin config
             $default_pickup_address = [
@@ -202,7 +212,6 @@ class ShippingController extends Controller
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
 
             if(count($packages) == 0){
-                $response['status'] = "Erfolgreich";
                 $this->createOrderResult[$orderId] = $this->buildResultArray(
                     false,
                     "Error:1001 - Add at least 1 Package before submission",
@@ -295,8 +304,8 @@ class ShippingController extends Controller
 
     public function _post($endpoint, $params)
     {
-        $api_token = $this->config->get('CargoConnect.api_token');
-        $api_url = $this->config->get('CargoConnect.api_url');
+        $api_token = $this->config->get('CargoConnect.api_token',"");
+        $api_url = $this->config->get('CargoConnect.api_url',"");
         $api_url .= $endpoint;
 
         $json_data = json_encode($params);
