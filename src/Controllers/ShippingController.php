@@ -158,7 +158,10 @@ class ShippingController extends Controller
 
             // gathering required data for registering the shipment
             $order = $this->orderRepository->findById($orderId, [
-                'comments'
+                'comments',
+                'location',
+                'relation',
+                'reference'
             ]);
 
             $pickup_address = $order->warehouseSender;
