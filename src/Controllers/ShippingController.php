@@ -1,5 +1,16 @@
 <?php declare(strict_types = 1);
 
+/*
+    "Error:1001 - Add at least 1 Package before submission"
+    "Error:1002 - Order validation failed"
+    "Error:1002 - Order validation failed, please handle inside Connect"
+    "Error:1003 - Missing or invalid pickup address"
+    "Error:1004 - Missing or invalid delivery address"
+    "Error:9999 - Other issue, please handle inside Connect"
+
+    "Success:1000 - Label created"
+*/
+
 namespace CargoConnect\Controllers;
 
 
