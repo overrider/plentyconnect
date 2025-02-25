@@ -94,7 +94,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 18;
+    private $plugin_revision = 19;
 
 	/**
 	 * ShipmentController constructor.
@@ -116,7 +116,7 @@ class ShippingController extends Controller
 								StorageRepositoryContract $storageRepository,
 								ShippingInformationRepositoryContract $shippingInformationRepositoryContract,
 								ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract,
-                                OrderShippingProfilesRepositoryContract $orderShippingProfilesRepository,
+                                OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract,
                                 ConfigRepository $config)
 	{
 		$this->request = $request;
@@ -125,7 +125,7 @@ class ShippingController extends Controller
 		$this->orderAddressRepository = $orderAddressRepositoryContract;
 		$this->orderShippingPackage = $orderShippingPackage;
 		$this->storageRepository = $storageRepository;
-        $this->orderShippingProfilesRepository = $orderShippingProfilesRepository;
+        $this->orderShippingProfilesRepository = $orderShippingProfilesRepositoryContract;
 
 		$this->shippingInformationRepositoryContract = $shippingInformationRepositoryContract;
 		$this->shippingPackageTypeRepositoryContract = $shippingPackageTypeRepositoryContract;
