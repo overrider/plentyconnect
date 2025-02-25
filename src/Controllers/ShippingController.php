@@ -90,6 +90,8 @@ class ShippingController extends Controller
      */
     private $config;
 
+    private $plugin_revision = 11;
+
 	/**
 	 * ShipmentController constructor.
      *
@@ -137,7 +139,7 @@ class ShippingController extends Controller
         $api_token = $this->config->get('CargoConnect.api_token', false);
         $api_url = $this->config->get('CargoConnect.api_url', false);
 
-        return $this->createOrderResult[144] = $this->buildResultArray(false, "Error:0001 - Preflight failed", false, null);
+        //return $this->createOrderResult[144] = $this->buildResultArray(false, "Error:0001 - Preflight failed", false, null);
 
 		$orderIds = $this->getOrderIds($request, $orderIds);
 		//$orderIds = $this->getOpenOrderIds($orderIds);
@@ -154,28 +156,15 @@ class ShippingController extends Controller
             //     'comments',
             // ], false);
 
+            // gathering required data for registering the shipment
             $order = $this->orderRepository->findById($orderId, [
                 'comments'
             ]);
 
-            // gathering required data for registering the shipment
-
+            $pickup_address = $order->warehouseSender;
             $delivery_address = $order->deliveryAddress;
-
-            //marker
-            $plugin_version = 10;
-            #$warehouse_address = $this->orderAddressRepository->getAddressOfOrder(103, $orderId, AddressType::WAREHOUSE);
-            $warehouse_address = $order->warehouseSender;
-
-            // $receiverFirstName     = $address->firstName;
-            // $receiverLastName      = $address->lastName;
-            // $receiverStreet        = $address->street;
-            // $receiverNo            = $address->houseNumber;
-            // $receiverPostalCode    = $address->postalCode;
-            // $receiverTown          = $address->town;
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
 
-            // Retrieve a default pickup address from plugin config
             $default_pickup_address = [
                 'pickup_company' => $this->config->get('CargoConnect.pickup_company', ""),
                 'pickup_department' => $this->config->get('CargoConnect.pickup_department', ""),
@@ -189,29 +178,14 @@ class ShippingController extends Controller
                 'pickup_phone' => $this->config->get('CargoConnect.pickup_phone', ""),
             ];
 
-            /*
-            $senderName           = $this->config->get('CargoConnect.senderName', 'plentymarkets GmbH - Timo Zenke');
-            $senderStreet         = $this->config->get('CargoConnect.senderStreet', 'Bürgermeister-Brunner-Str.');
-            $senderNo             = $this->config->get('CargoConnect.senderNo', '15');
-            $senderPostalCode     = $this->config->get('CargoConnect.senderPostalCode', '34117');
-            $senderTown           = $this->config->get('CargoConnect.senderTown', 'Kassel');
-            $senderCountryID      = $this->config->get('CargoConnect.senderCountry', '0');
-            $senderCountry        = ($senderCountryID == 0 ? 'Germany' : 'Austria');
-            */
-
-            // gets order shipping packages from current order
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
 
+            // Return an error if there is no package information. In practice, this won't happen, 
+            // since Plenty appears to add a package automatically when submitting an order
             if(count($packages) == 0){
-                $this->createOrderResult[$orderId] = $this->buildResultArray(
-                    false,
-                    "Error:1001 - Add at least 1 Package before submission",
-                    false,
-                    null,
-                );
+                $this->createOrderResult[$orderId] = $this->buildResultArray(false, "Error:1001 - Add at least 1 Package before submission", false, null);
                 continue;
             }
-
 
             $package_infos = [];
             foreach($packages as $package){
@@ -225,8 +199,6 @@ class ShippingController extends Controller
                     'data1' => $package,
                     'data2' => $packageType,
                 ];
-
-                #list($length, $width, $height) = $this->getPackageDimensions($packageType);
             }
 
             // iterating through packages
@@ -275,18 +247,12 @@ class ShippingController extends Controller
                 'default_pickup_address' => $default_pickup_address,
                 'packages' => $packages,
                 'package_infos' => $package_infos,
-                'plugin_version' => $plugin_version,
+                'plugin_revision' => $this->plugin_version,
             ];
 
-            $this->_post("/ping", $params);
+            $this->_post("/submit-order", $params);
 
-            $response['status'] = "Erfolgreich";
-            $this->createOrderResult[$orderId] = $this->buildResultArray(
-                true,
-                $this->getStatusMessage($response),
-                false,
-                null, //$shipmentItems
-            );
+            $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, null //$shipmentItems);
 		}
 
 		// return all results to service
@@ -352,8 +318,6 @@ class ShippingController extends Controller
 
     public function _get(){
     }
-
-
 
     /**
      * Cancels registered shipment(s)
@@ -491,12 +455,9 @@ class ShippingController extends Controller
 
 		$parcelServicePreset = $parcelServicePresetRepository->getPresetById($parcelServicePresetId);
 
-		if($parcelServicePreset)
-		{
+		if($parcelServicePreset) {
 			return $parcelServicePreset;
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
