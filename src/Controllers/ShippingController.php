@@ -178,7 +178,7 @@ class ShippingController extends Controller
             $tags = $order->tags;
             $iw_shipping_profile_id = $order->shippingProfileId;
 
-            $warehouse_address1 = $this->orderAddressRepository->findAddress($orderId);
+            //$warehouse_address1 = $this->orderAddressRepository->findAddress($orderId);
 
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
             #$shipping_information = $order->shippingInformation;
@@ -274,7 +274,6 @@ class ShippingController extends Controller
                 'order' => $order,
                 'delivery_address' => $delivery_address,
                 'billing_address' => $billing_address,
-                'warehouse_address' => $warehouse_address,
                 'pickup_address' => $pickup_address,
                 'default_pickup_address' => $default_pickup_address,
                 'tags' => $tags,
@@ -283,7 +282,6 @@ class ShippingController extends Controller
                 'shipping_information' => $shipping_information,
                 'shipping_packages' => $shipping_packages,
                 'iw_shipping_profile_id' => $iw_shipping_profile_id,
-                'warehouse_address1' => $warehouse_address1,
                 'plugin_revision' => $this->plugin_revision,
                 'execution_time' => $execution_time,
             ];
