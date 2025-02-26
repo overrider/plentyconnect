@@ -296,21 +296,7 @@ class ShippingController extends Controller
                 'status' => 'shipment sucessfully registered'
             ];
 
-            $shipmentItems = array();
-
-            $shipmentItems[] = $this->buildShipmentItems(
-                $response['labelUrl'],
-                $response['shipmentNumber']
-            );
-
-            // 203 = $sequenceNumber,
-            $this->orderShippingPackage->updateOrderShippingPackage(
-                $response['sequenceNumber'],
-                $this->buildPackageInfo(
-                    $response['shipmentNumber'],
-                    $response['labelUrl']
-                )
-            );
+            $shipmentItems = $this->handleAfterRegisterShipment($response['labelUrl'], $response['shipmentNumber'], 205);
 
             // adds result
             $this->createOrderResult[$orderId] = $this->buildResultArray(true, $this->getStatusMessage($response), false, $shipmentItems);
@@ -692,39 +678,13 @@ class ShippingController extends Controller
      * @param string $sequenceNumber
 	 * @return array
 	 */
-	private function MyhandleAfterRegisterShipment($labelUrl, $shipmentNumber, $sequenceNumber)
+	private function handleAfterRegisterShipment($labelUrl, $shipmentNumber, $sequenceNumber)
 	{
-        return;
-        $token = $this->config->get('CargoConnect.api_token');
-
-        $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Authorization: Bearer " . $token,
-            "Content-Type: application/json"
-        ));
-
-        $data = array(
-            "myData" => "Handling after register shipment",
-        );
-
-        $json_data = json_encode($data);
-
-        curl_setopt($ch, CURLOPT_URL, $APP_URL);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-        curl_exec($ch);
-        curl_close($ch);
-        // marker
-
-        /*
 		$shipmentItems = array();
-		$storageObject = $this->saveLabelToS3(
-			$labelUrl,
-			$shipmentNumber . '.pdf');
+
+		// $storageObject = $this->saveLabelToS3(
+		// 	$labelUrl,
+		// 	$shipmentNumber . '.pdf');
 
 		$shipmentItems[] = $this->buildShipmentItems(
 			$labelUrl,
@@ -734,9 +694,8 @@ class ShippingController extends Controller
 			$sequenceNumber,
 			$this->buildPackageInfo(
 				$shipmentNumber,
-				$storageObject->key));
+				$labelUrl));
+
 		return $shipmentItems;
-        */
-        return [];
 	}
 }
