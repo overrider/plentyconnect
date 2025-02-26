@@ -286,7 +286,7 @@ class ShippingController extends Controller
                 'execution_time' => $execution_time,
             ];
 
-            $this->_post("/submit-order", $params);
+            $res = $this->_post("/submit-order", $params);
 
             //$this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, $shipmentItems);
             $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Label erstellt", false, null);
@@ -664,8 +664,9 @@ class ShippingController extends Controller
      * @param string $sequenceNumber
 	 * @return array
 	 */
-	private function handleAfterRegisterShipment($labelUrl, $shipmentNumber, $sequenceNumber)
+	private function MyhandleAfterRegisterShipment($labelUrl, $shipmentNumber, $sequenceNumber)
 	{
+        return;
         $token = $this->config->get('CargoConnect.api_token');
 
         $APP_URL='https://staging.spedition.de/api/plentymarkets/ping';
