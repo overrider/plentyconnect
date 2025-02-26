@@ -94,7 +94,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 22;
+    private $plugin_revision = 23;
 
 	/**
 	 * ShipmentController constructor.
@@ -142,6 +142,8 @@ class ShippingController extends Controller
 	 */
 	public function registerShipments(Request $request, $orderIds)
 	{
+        $start_time_ts = microtime(true);
+
         $api_token = $this->config->get('CargoConnect.api_token', false);
         $api_url = $this->config->get('CargoConnect.api_url', false);
 
@@ -172,15 +174,16 @@ class ShippingController extends Controller
 
             $pickup_address = $order->warehouseSender;
             $delivery_address = $order->deliveryAddress;
-            $iw_shipping_profile_id = $order->shippingProfileId;
-            // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
-
-            $shipping_information = $order->shippingInformation;
-			$shipping_information1 = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
-            $shipping_information2 = $this->orderShippingProfilesRepository->getCombinations($orderId, true);
-            $shipping_information3 = $this->getParcelServicePreset($iw_shipping_profile_id);
-
             $tags = $order->tags;
+            $iw_shipping_profile_id = $order->shippingProfileId;
+
+            // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
+            #$shipping_information = $order->shippingInformation;
+			#$shipping_information1 = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
+            #$shipping_information2 = $this->orderShippingProfilesRepository->getCombinations($orderId, true);
+            
+            $shipping_information = $this->getParcelServicePreset($iw_shipping_profile_id);
+
 
             $shipping_packages = $order->shippingPackages;
 
@@ -215,8 +218,8 @@ class ShippingController extends Controller
                 $weight = $package->weight;
 
                 $package_infos[] = [
-                    'data1' => $package,
-                    'data2' => $packageType,
+                    'package' => $package,
+                    'package_type' => $packageType,
                 ];
             }
 
@@ -259,22 +262,25 @@ class ShippingController extends Controller
             }
              */
 
+
+            $end_time_ts = microtime(true);
+            $time_diff = $end_time_ts - $start_time_ts;
+            $execution_time = number_format($time_diff, 2);
+
             $params = [
                 'order' => $order,
                 'delivery_address' => $delivery_address,
                 'warehouse_address' => $warehouse_address,
                 'pickup_address' => $pickup_address,
                 'default_pickup_address' => $default_pickup_address,
+                'tags' => $tags,
                 'packages' => $packages,
                 'package_infos' => $package_infos,
                 'shipping_information' => $shipping_information,
-                'shipping_information1' => $shipping_information1,
-                'shipping_information2' => $shipping_information2,
-                'shipping_information3' => $shipping_information3,
-                'tags' => $tags,
                 'shipping_packages' => $shipping_packages,
                 'iw_shipping_profile_id' => $iw_shipping_profile_id,
                 'plugin_revision' => $this->plugin_revision,
+                'execution_time' => $execution_time,
             ];
 
             $this->_post("/submit-order", $params);
