@@ -292,7 +292,7 @@ class ShippingController extends Controller
             $response = [
                 'labelUrl' => 'https://backpack.ironwhale.com/label.pdf',
                 'shipmentNumber' => '12345678912341',
-                'sequenceNumber' => 203,
+                'sequenceNumber' => 3,
                 'status' => 'shipment sucessfully registered'
             ];
 
