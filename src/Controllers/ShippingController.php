@@ -94,7 +94,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 23;
+    private $plugin_revision = 1;
 
 	/**
 	 * ShipmentController constructor.
@@ -174,6 +174,7 @@ class ShippingController extends Controller
 
             $pickup_address = $order->warehouseSender;
             $delivery_address = $order->deliveryAddress;
+            $billing_address = $order->billingAddress;
             $tags = $order->tags;
             $iw_shipping_profile_id = $order->shippingProfileId;
 
@@ -270,6 +271,7 @@ class ShippingController extends Controller
             $params = [
                 'order' => $order,
                 'delivery_address' => $delivery_address,
+                'billing_address' => $billing_address,
                 'warehouse_address' => $warehouse_address,
                 'pickup_address' => $pickup_address,
                 'default_pickup_address' => $default_pickup_address,
