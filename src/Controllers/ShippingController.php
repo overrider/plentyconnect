@@ -287,13 +287,41 @@ class ShippingController extends Controller
             ];
 
             $res = $this->_post("/submit-order", $params);
+            #$this->createOrderResult[$orderId] = $this->buildResultArray(true, "Label erstellt", false, null);
 
-            //$this->createOrderResult[$orderId] = $this->buildResultArray(true, "Success: Label created", false, $shipmentItems);
-            $this->createOrderResult[$orderId] = $this->buildResultArray(true, "Label erstellt", false, null);
+            $response = [
+                'labelUrl' => 'https://backpack.ironwhale.com/label.pdf',
+                'shipmentNumber' => '12345678912341',
+                'sequenceNumber' => 203,
+                'status' => 'shipment sucessfully registered'
+            ];
+
+            $shipmentItems = array();
+
+            $shipmentItems[] = $this->buildShipmentItems(
+                $response['labelUrl'],
+                $response['shipmentNumber']
+            );
+
+            // 203 = $sequenceNumber,
+            $this->orderShippingPackage->updateOrderShippingPackage(
+                $response['sequenceNumber'],
+                $this->buildPackageInfo(
+                    $response['shipmentNumber'],
+                    $response['labelUrl']
+                )
+            );
+
+            // adds result
+            $this->createOrderResult[$orderId] = $this->buildResultArray(true, $this->getStatusMessage($response), false, $shipmentItems);
+
+            // saves shipping information
+            $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
 		}
 
 		// return all results to service
 		return $this->createOrderResult;
+        //marker
 	}
 
     public function _post($endpoint, $params)
@@ -690,6 +718,7 @@ class ShippingController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
         curl_exec($ch);
         curl_close($ch);
+        // marker
 
         /*
 		$shipmentItems = array();
