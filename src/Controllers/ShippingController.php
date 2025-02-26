@@ -178,6 +178,8 @@ class ShippingController extends Controller
             $tags = $order->tags;
             $iw_shipping_profile_id = $order->shippingProfileId;
 
+            $warehouse_address1 = $this->orderAddressRepository->findAddressByType($orderId, 7);
+
             // $receiverCountry       = $address->country->name; // or: $address->country->isoCode2
             #$shipping_information = $order->shippingInformation;
 			#$shipping_information1 = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId($orderId);
@@ -281,6 +283,7 @@ class ShippingController extends Controller
                 'shipping_information' => $shipping_information,
                 'shipping_packages' => $shipping_packages,
                 'iw_shipping_profile_id' => $iw_shipping_profile_id,
+                'warehouse_address1' => $warehouse_address1,
                 'plugin_revision' => $this->plugin_revision,
                 'execution_time' => $execution_time,
             ];
