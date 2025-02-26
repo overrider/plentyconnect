@@ -94,7 +94,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 21;
+    private $plugin_revision = 22;
 
 	/**
 	 * ShipmentController constructor.
@@ -263,6 +263,7 @@ class ShippingController extends Controller
                 'order' => $order,
                 'delivery_address' => $delivery_address,
                 'warehouse_address' => $warehouse_address,
+                'pickup_address' => $pickup_address,
                 'default_pickup_address' => $default_pickup_address,
                 'packages' => $packages,
                 'package_infos' => $package_infos,
