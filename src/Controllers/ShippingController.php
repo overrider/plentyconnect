@@ -94,7 +94,7 @@ class ShippingController extends Controller
      */
     private $config;
 
-    private $plugin_revision = 5;
+    private $plugin_revision = 6;
 
 	/**
 	 * ShipmentController constructor.
@@ -292,7 +292,7 @@ class ShippingController extends Controller
             $response = [
                 'labelUrl' => 'https://backpack.ironwhale.com/label.pdf',
                 'shipmentNumber' => '12345678912341',
-                'sequenceNumber' => 3,
+                'sequenceNumber' => 205,
                 'status' => 'shipment sucessfully registered'
             ];
 
