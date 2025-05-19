@@ -308,6 +308,7 @@ class ShippingController extends Controller
 		// return all results to service
 		return $this->createOrderResult;
         //marker
+        // probably we need to add the labelBase64 somewhere...
 	}
 
     public function _post($endpoint, $params)
